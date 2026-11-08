@@ -54,14 +54,13 @@ jobs:
           }
           JSON
 
+            - name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
+
       - name: Build APK
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: changeit
           BUBBLEWRAP_KEY_PASSWORD: changeit
-        run: bubblewrap build --skipPwaValidation
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: student-register-apk
-          path: "*.apk"
+        run: |
+          yes | bubblewrap build --skipPwaValidation --skipPwaValidation || true
+          ls -la *.apk || (echo "NO APK FOUND" && exit 1)

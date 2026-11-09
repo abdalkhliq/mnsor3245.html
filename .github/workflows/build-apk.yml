@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,7 +42,7 @@ jobs:
             "navigationColor": "#6b4a36",
             "backgroundColor": "#f7f1e6",
             "enableNotifications": false,
-            "startUrl": "/mnsor3245.html",
+            "startUrl": "/mnsor3245.html/",
             "iconUrl": "https://abdalkhliq.github.io/mnsor3245.html/icon-512.png",
             "maskableIconUrl": "https://abdalkhliq.github.io/mnsor3245.html/icon-512.png",
             "webManifestUrl": "https://abdalkhliq.github.io/mnsor3245.html/manifest.json",
@@ -54,12 +55,19 @@ jobs:
           }
           JSON
 
-                  - name: Accept Android licenses
-        run: yes | sdkmanager --licenses || true
-   - name: Build APK
+      - name: Build APK
+        timeout-minutes: 12
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: changeit
           BUBBLEWRAP_KEY_PASSWORD: changeit
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
-          yes | bubblewrap build --skipPwaValidation --skipPwaValidation || true
-          ls -la *.apk || (echo "NO APK FOUND" && exit 1)
+          bubblewrap build --skipPwaValidation < /dev/null
+          ls -la *.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: student-register-apk
+          path: "*.apk"

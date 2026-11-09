@@ -54,7 +54,7 @@ jobs:
           }
           JSON
 
-            - name: Accept Android licenses
+                  - name: Accept Android licenses
         run: yes | sdkmanager --licenses || true
 
       - name: Build APK
